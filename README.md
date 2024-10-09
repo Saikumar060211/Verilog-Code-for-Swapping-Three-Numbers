@@ -45,7 +45,7 @@ module normal_code(a,b,c,x,y,z);
     end
 endmodule
 ```
-Testbench for Swapping Three Numbers:
+## Testbench for Swapping Three Numbers:
 ```
 module normal_tb;
     reg [3:0] a, b, c;
