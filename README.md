@@ -28,65 +28,76 @@ Save and Document Results:
 
 Capture the waveform output and include the results in your report for verification.
 
-## Verilog Code:
+## Verilog Code for Swapping Three Numbers:
+### Blocking:
 ```
-module normal_code(a,b,c,x,y,z);
-    input[3:0]a; 
-    input[3:0]b;
-    input[3:0]c;
-    output reg [3:0]x; 
-    output reg [3:0]y; 
-    output reg [3:0]z;
-
-    always @(*) begin
-        x <= c;
-        y <= a;
-        z <= b;
-    end
+module blocking_3();
+reg [7:0]a,b,c;
+initial
+begin
+a=8'd24;
+b=8'd15;
+c=8'd20;
+#10
+b=a;
+c=b;
+a=c;
+end 
+initial 
+begin
+$monitor("value of a:%d,and b=%d,c=%d",a,b,c);
+end
+endmodule
+```
+### Non Blocking:
+```
+module nonblocking_3();
+reg [7:0]a,b,c;
+initial
+begin
+a=8'd24;
+b=8'd15;
+c=8'd20;
+#10
+b<=a;
+c<=b;
+a<=c;
+end 
+initial 
+begin
+$monitor("value of a:%d,and b=%d,c=%d",a,b,c);
+end
 endmodule
 ```
 ## Testbench for Swapping Three Numbers:
+### Blocking:
 ```
-module normal_tb;
-    reg [3:0] a, b, c;
-    wire [3:0] x, y, z;
-
-    // Instantiate swap_three module
-    normal_code dut(
-        .a(a), 
-        .b(b), 
-        .c(c), 
-        .x(x), 
-        .y(y), 
-        .z(z)
-    );
-
-    initial begin
-        // Test case 1: Positive numbers
-        a = 4'd6;
-        b = 4'd5;
-        c = 4'd4;
-        #10;
-
-
-        // Test case 3: Mixed numbers
-        a = 4'd3;
-        b = 4'd2;
-        c = 4'd1;
-        #10;
-
-        $finish;
-    end
-    
-       // Monitor outputs
-    initial begin
-        $monitor("Time = %0t, a = %0d, b = %0d, c = %0d, x = %0d, y = %0d, z = %0d",
-                 $time, a, b, c, x, y, z);
-    end
+module tb_blocking_3;
+blocking_3 uut();
+initial begin
+$monitor("At time %0dns: value of a = %d, b = %d, c = %d", $time, uut.a, uut.b, uut.c);
+#50;
+$finish;
+end
 endmodule
 ```
-## sample output
-![Screenshot 2024-10-09 154722](https://github.com/user-attachments/assets/7a5029a9-dd44-4471-bb94-234ecc696820)
+### Non Blocking:
+```
+module tb_nonblocking_3;
+nonblocking_3 uut();
+initial begin
+$monitor("At time %0dns: value of a = %d, b = %d, c = %d", $time, uut.a, uut.b, uut.c);
+#50
+$finish;
+end
+endmodule
+```
+## Output:
+### Blocking:
+![Screenshot 2024-10-09 160143](https://github.com/user-attachments/assets/f7d08029-54b4-43d0-a61d-05a5bd01ff7e)
+
+### Non Blocking:
+![Screenshot 2024-10-09 160046](https://github.com/user-attachments/assets/b04a02a1-868b-4b3d-bf4e-26e6d43d3c0a)
 
        
 ## Conclusion
