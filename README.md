@@ -28,71 +28,78 @@ Save and Document Results:
 
 Capture the waveform output and include the results in your report for verification.
 
-Verilog Code:
-
-// swap_three_numbers.v
-module swap_three_numbers (
-    input wire [7:0] a_in,
-    input wire [7:0] b_in,
-    input wire [7:0] c_in,
-    output reg [7:0] a_out,
-    output reg [7:0] b_out,
-    output reg [7:0] c_out
-);
-    always @(*) begin
-        a_out = b_in; // Swap: a = b
-        b_out = c_in; // Swap: b = c
-        c_out = a_in; // Swap: c = a
-    end
+## Verilog Code for Swapping Three Numbers:
+### Blocking:
+```
+module blocking_3();
+reg [7:0]a,b,c;
+initial
+begin
+a=8'd24;
+b=8'd15;
+c=8'd20;
+#10
+b=a;
+c=b;
+a=c;
+end 
+initial 
+begin
+$monitor("value of a:%d,and b=%d,c=%d",a,b,c);
+end
 endmodule
-
-
-Testbench for Swapping Three Numbers:
-
-// swap_three_numbers_tb.v
-`timescale 1ns / 1ps
-
-module swap_three_numbers_tb;
-
-    // Inputs
-    reg [7:0] a;
-    reg [7:0] b;
-    reg [7:0] c;
-
-    // Outputs
-    wire [7:0] a_out;
-    wire [7:0] b_out;
-    wire [7:0] c_out;
-
-    // Instantiate the Unit Under Test (UUT)
-    swap_three_numbers uut (
-        .a_in(a),
-        .b_in(b),
-        .c_in(c),
-        .a_out(a_out),
-        .b_out(b_out),
-        .c_out(c_out)
-    );
-
-    // Test procedure
-    initial begin
-        // Initialize inputs
-        a = 8'd10; // Assign 10 to a
-        b = 8'd20; // Assign 20 to b
-        c = 8'd30; // Assign 30 to c
-
-        // Wait for 10 ns to observe swap
-        #10;
-
-        // Display results
-        $display("Before Swap: a = %d, b = %d, c = %d", a, b, c);
-        #10;
-        $display("After Swap: a = %d, b = %d, c = %d", a_out, b_out, c_out);
-        
-        // Stop the simulation
-        #10 $stop;
-    end
+```
+### Non Blocking:
+```
+module nonblocking_3();
+reg [7:0]a,b,c;
+initial
+begin
+a=8'd24;
+b=8'd15;
+c=8'd20;
+#10
+b<=a;
+c<=b;
+a<=c;
+end 
+initial 
+begin
+$monitor("value of a:%d,and b=%d,c=%d",a,b,c);
+end
 endmodule
+```
+## Testbench for Swapping Three Numbers:
+### Blocking:
+```
+module tb_blocking_3;
+blocking_3 uut();
+initial begin
+$monitor("At time %0dns: value of a = %d, b = %d, c = %d", $time, uut.a, uut.b, uut.c);
+#50;
+$finish;
+end
+endmodule
+```
+### Non Blocking:
+```
+module tb_nonblocking_3;
+nonblocking_3 uut();
+initial begin
+$monitor("At time %0dns: value of a = %d, b = %d, c = %d", $time, uut.a, uut.b, uut.c);
+#50
+$finish;
+end
+endmodule
+```
+## Output:
+### Blocking:
+![Screenshot 2024-10-09 160143](https://github.com/user-attachments/assets/f7d08029-54b4-43d0-a61d-05a5bd01ff7e)
+
+### Non Blocking:
+![Screenshot 2024-10-09 160046](https://github.com/user-attachments/assets/b04a02a1-868b-4b3d-bf4e-26e6d43d3c0a)
+
+
 
 Conclusion
 In this experiment, a Verilog HDL code for swapping three numbers was designed and successfully simulated. The testbench verified the swapping operation, showing that the values of three input numbers (a, b, and c) were swapped correctly without the use of temporary variables. This experiment demonstrated the effectiveness of Verilog in implementing logical operations and control mechanisms such as swapping values. The simulation results confirm the correct functionality of the design.
